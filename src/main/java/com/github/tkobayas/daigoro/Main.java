@@ -27,6 +27,9 @@ public class Main {
 
         String dumpFileName = cmd.getArgList().get( 0 );
         File dumpFile = new File( dumpFileName );
+        
+        Daigoro daigoro = new Daigoro();
+        daigoro.createReport(dumpFile);
 
         System.out.println( "Hello Daigoro! : " + cmd.getArgList() );
     }
