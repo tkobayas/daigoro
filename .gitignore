@@ -7,3 +7,4 @@ build/classes/
 temp/
 transaction.log
 *-report/
+QuickTest.java
