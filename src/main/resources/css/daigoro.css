@@ -1,0 +1,20 @@
+td.RUNNING {
+	 background-color: aquamarine
+}
+
+td.BLOCKED {
+   background-color: tomato
+}
+
+td.BLOCKING {
+   background-color: gold
+}
+
+td.IDLE {
+   background-color: lightsteelblue
+}
+
+td.ABSENT {
+   background-color: dimgray
+}
+
