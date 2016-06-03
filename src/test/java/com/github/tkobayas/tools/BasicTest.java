@@ -10,7 +10,7 @@ public class BasicTest extends TestCase {
 
     public void testDeadlock01() {
         Daigoro daigoro = new Daigoro();
-        daigoro.createReport( new File( "src/test/resources/deadlock/deadlock01.out" ) );
+        daigoro.createReport( new File( "src/test/resources/basic/deadlock01.out" ) );
         assertTrue( true );
     }
 }

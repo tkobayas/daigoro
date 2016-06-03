@@ -7,8 +7,15 @@ import java.util.regex.Pattern;
 public class DumpAnalyzer {
 
     // java.lang.Thread.State: RUNNABLE
-    private static final Pattern RUNNABLE = Pattern.compile( "^.*: RUNNABLE$" );
+    private static final Pattern RUNNABLE = Pattern.compile( "^.*: RUNNABLE.*$" );
+    
+    // java.lang.Thread.State: BLOCKED (on object monitor)
+    private static final Pattern BLOCKED = Pattern.compile( "^.*: BLOCKED.*$" );
 
+    // java.lang.Thread.State: WAITING (parking)
+    // java.lang.Thread.State: TIMED_WAITING (on object monitor)
+    private static final Pattern IDLE = Pattern.compile( "^.*: (WAITING|TIMED_WAITING).*$" );
+    
     public void analyze( Dump dump ) {
         StackHolder[][] stackMatrix = dump.getStackMatrix();
         Map<String, List<StackHolder>> stackHolderMapByThread = dump.getStackHolderMapByThread();
@@ -17,15 +24,42 @@ public class DumpAnalyzer {
             List<StackHolder> list = stackHolderMapByThread.get( thread );
             for ( int i = 0; i < list.size(); i++ ) {
                 StackHolder stackHolder = list.get( i );
-                if ( isRunning( stackHolder ) ) {
+                if (isNative(stackHolder)) {
+                    stackHolder.setStatus( Status.NATIVE );
+                } else if ( isRunning( stackHolder ) ) {
                     stackHolder.setStatus( Status.RUNNING );
                     if ( isSameAsPrevious( stackHolder, list, i ) ) {
                         stackHolder.setStatus( Status.SAME_AS_PREVIOUS );
                     }
+                } else if (isBlocked(stackHolder)) {
+                    stackHolder.setStatus( Status.BLOCKED);
+                } else if (isIdle(stackHolder)) {
+                    stackHolder.setStatus( Status.IDLE);
                 }
             }
         }
 
+    }
+
+    private boolean isNative( StackHolder stackHolder ) {
+        List<String> stack = stackHolder.getStack();
+        if (stack.size() < 3) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    private boolean isIdle( StackHolder stackHolder ) {
+        List<String> stack = stackHolder.getStack();
+        String stateLine = stack.get( 1 );
+        return IDLE.matcher( stateLine ).matches();
+    }
+
+    private boolean isBlocked( StackHolder stackHolder ) {
+        List<String> stack = stackHolder.getStack();
+        String stateLine = stack.get( 1 );
+        return BLOCKED.matcher( stateLine ).matches();
     }
 
     private boolean isSameAsPrevious( StackHolder stackHolder, List<StackHolder> list, int index ) {
@@ -52,9 +86,11 @@ public class DumpAnalyzer {
 
     private boolean isRunning( StackHolder stackHolder ) {
         List<String> stack = stackHolder.getStack();
+        
         if ( stack.size() == 1 ) {
             return true;
         }
+        
         String stateLine = stack.get( 1 );
         return RUNNABLE.matcher( stateLine ).matches();
     }

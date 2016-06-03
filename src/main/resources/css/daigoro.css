@@ -10,6 +10,10 @@ td.BLOCKED {
    background-color: tomato
 }
 
+td.DEADLOCKED {
+   background-color: tomato
+}
+
 td.BLOCKING {
    background-color: gold
 }
@@ -22,3 +26,6 @@ td.ABSENT {
    background-color: dimgray
 }
 
+td.NATIVE {
+   background-color: lavender
+}
