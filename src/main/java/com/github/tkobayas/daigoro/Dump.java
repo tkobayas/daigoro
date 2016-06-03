@@ -16,6 +16,7 @@ public class Dump {
 
     private List<String> threadList = new ArrayList<String>();
     private Map<String, String> threadFileNameMap = new HashMap<String, String>();
+    private Map<String, ThreadStatus> threadStatusMap = new HashMap<String, ThreadStatus>();
 
     // key = timeStamp, value = map of stackHolder keyed by thread. This is the genuine holder. Populated through DumpParser.parse()
     private Map<String, Map<String, StackHolder>> stackHolderMapByTimeStamp = new HashMap<String, Map<String, StackHolder>>();
@@ -31,6 +32,14 @@ public class Dump {
 
     // key = timeStamp, value = deadlockAnalysis
     private Map<String, List<String>> deadlockAnalysisMap = new HashMap<String, List<String>>();
+
+    public Map<String, ThreadStatus> getThreadStatusMap() {
+        return threadStatusMap;
+    }
+
+    public void setThreadStatusMap( Map<String, ThreadStatus> threadStatusMap ) {
+        this.threadStatusMap = threadStatusMap;
+    }
 
     public Map<String, List<String>> getStackInformationMap() {
         return stackInformationMap;

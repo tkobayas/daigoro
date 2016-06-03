@@ -44,6 +44,7 @@ public class Daigoro {
             root.put( "timeStampList", dump.getTimeStampList() );
             root.put( "threadList", dump.getThreadList() );
             root.put( "status", dump.getStackMatrix() );
+            root.put( "threadStatusMap", dump.getThreadStatusMap() );
 
             PrintWriter writer = new PrintWriter( new BufferedWriter( new FileWriter( new File( reportDir, "index.html" ) ) ) );
             template.process( root, writer );
