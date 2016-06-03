@@ -21,7 +21,7 @@
   <tr>
     <td align="right">${thread}</td>
     <#list timeStampList as timeStamp>
-    <td class="${status[timeStamp?index][thread?index].status}"></td>
+    <td align="center" valign="center" class="${status[timeStamp?index][thread?index].status}">${status[timeStamp?index][thread?index].statusChar}</td>
     </#list>
   </tr>
 </#list>

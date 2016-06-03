@@ -2,6 +2,10 @@ td.RUNNING {
 	 background-color: aquamarine
 }
 
+td.SAME_AS_PREVIOUS {
+   background-color: aquamarine
+}
+
 td.BLOCKED {
    background-color: tomato
 }
