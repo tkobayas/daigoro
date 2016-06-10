@@ -43,12 +43,32 @@ public class DumpAnalyzer {
                 threadStatusMap.put( thread, ThreadStatus.NATIVE );
             } else if ( isFullyIdle( list ) ) {
                 threadStatusMap.put( thread, ThreadStatus.IDLE );
+            } else if ( isFullyUnchanged( list ) ) {
+                threadStatusMap.put( thread, ThreadStatus.UNCHANGED );
             } else {
                 threadStatusMap.put( thread, ThreadStatus.WORKING );
             }
 
         }
 
+    }
+
+    private boolean isFullyUnchanged( List<StackHolder> list ) {
+        if ( list.get( 0 ).getStatus() != Status.RUNNING ) {
+            return false;
+        }
+
+        if ( list.size() < 2 ) {
+            return false;
+        }
+
+        for ( int i = 1; i < list.size(); i++ ) {
+
+            if ( list.get( i ).getStatus() != Status.SAME_AS_PREVIOUS ) {
+                return false;
+            }
+        }
+        return true;
     }
 
     private boolean isFullyIdle( List<StackHolder> list ) {

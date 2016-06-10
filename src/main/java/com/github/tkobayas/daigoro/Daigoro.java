@@ -46,11 +46,15 @@ public class Daigoro {
             root.put( "status", dump.getStackMatrix() );
             root.put( "threadStatusMap", dump.getThreadStatusMap() );
 
-            PrintWriter writer = new PrintWriter( new BufferedWriter( new FileWriter( new File( reportDir, "index.html" ) ) ) );
+            File indexHtml = new File( reportDir, "index.html" );
+            PrintWriter writer = new PrintWriter( new BufferedWriter( new FileWriter( indexHtml ) ) );
             template.process( root, writer );
             writer.close();
 
             FileUtils.copyDir( Paths.get( this.getClass().getResource( "/css" ).toURI() ), new File( reportDir, "css" ).toPath() );
+
+            System.out.println( "Created Report : " );
+            System.out.println( indexHtml.getAbsolutePath() );
 
         } catch ( Exception e ) {
             throw new RuntimeException( e );

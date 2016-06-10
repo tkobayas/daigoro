@@ -6,15 +6,13 @@
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
 <script>
 $(function(){
-    if ($('#check').val() != '1') {
         $('.NATIVE').hide();
         $('.IDLE').hide();
-    }
+        $('.UNCHANGED').hide();
 });
 
-function hideToggle() {
-    $('.NATIVE').toggle();
-    $('.IDLE').toggle();
+function hideToggle(status) {
+    $(status).toggle();
 }
 </script>
 <link rel="stylesheet" href="css/foundation.css">
@@ -25,7 +23,10 @@ function hideToggle() {
 
 <div class="checkbox">
     <label>
-         <input id="check" type="checkbox" onclick="hideToggle();"> Show hidden threads (native/idle)
+         Show hidden threads : &nbsp;
+         <input id="check" type="checkbox" checked="false" onclick="hideToggle('.NATIVE');">Native &nbsp;
+         <input id="check" type="checkbox" checked="false" onclick="hideToggle('.IDLE');">Idle &nbsp;
+         <input id="check" type="checkbox" checked="false" onclick="hideToggle('.UNCHANGED');">Unchanged &nbsp;
     </label>
 </div>
 
