@@ -6,6 +6,9 @@
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
 <script>
 $(function(){
+        $('#check1').prop('checked', false);
+        $('#check2').prop('checked', false);
+        $('#check3').prop('checked', false);
         $('.NATIVE').hide();
         $('.IDLE').hide();
         $('.UNCHANGED').hide();
@@ -24,9 +27,9 @@ function hideToggle(status) {
 <div class="checkbox">
     <label>
          Show hidden threads : &nbsp;
-         <input id="check" type="checkbox" checked="false" onclick="hideToggle('.NATIVE');">Native &nbsp;
-         <input id="check" type="checkbox" checked="false" onclick="hideToggle('.IDLE');">Idle &nbsp;
-         <input id="check" type="checkbox" checked="false" onclick="hideToggle('.UNCHANGED');">Unchanged &nbsp;
+         <input id="check1" type="checkbox" checked="false" onclick="hideToggle('.NATIVE');">Native &nbsp;
+         <input id="check2" type="checkbox" checked="false" onclick="hideToggle('.IDLE');">Idle &nbsp;
+         <input id="check3" type="checkbox" checked="false" onclick="hideToggle('.UNCHANGED');">Unchanged &nbsp;
     </label>
 </div>
 

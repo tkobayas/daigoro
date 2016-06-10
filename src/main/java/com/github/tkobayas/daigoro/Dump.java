@@ -12,7 +12,7 @@ public class Dump {
     private String reportName;
 
     private List<String> timeStampList = new ArrayList<String>();
-    private Map<String, String> timeStampFileNameMap = new HashMap<String, String>();
+    private Map<String, String> timeStampDirNameMap = new HashMap<String, String>();
 
     private List<String> threadList = new ArrayList<String>();
     private Map<String, String> threadFileNameMap = new HashMap<String, String>();
@@ -97,12 +97,12 @@ public class Dump {
         this.timeStampList = timeStampList;
     }
 
-    public Map<String, String> getTimeStampFileNameMap() {
-        return timeStampFileNameMap;
+    public Map<String, String> getTimeStampDirNameMap() {
+        return timeStampDirNameMap;
     }
 
-    public void setTimeStampFileNameMap( Map<String, String> timeStampFileNameMap ) {
-        this.timeStampFileNameMap = timeStampFileNameMap;
+    public void setTimeStampDirNameMap( Map<String, String> timeStampDirNameMap ) {
+        this.timeStampDirNameMap = timeStampDirNameMap;
     }
 
     public List<String> getThreadList() {
@@ -160,7 +160,7 @@ public class Dump {
     }
 
     public String getTimeStampFromFileName( String timeStampFileName ) {
-        for ( Entry<String, String> entry : timeStampFileNameMap.entrySet() ) {
+        for ( Entry<String, String> entry : timeStampDirNameMap.entrySet() ) {
             if ( entry.getValue().equals( timeStampFileName ) ) {
                 return entry.getKey();
             }

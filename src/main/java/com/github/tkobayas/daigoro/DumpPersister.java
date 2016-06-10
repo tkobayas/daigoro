@@ -18,12 +18,13 @@ public class DumpPersister {
         try {
             for ( String timeStamp : dump.getTimeStampList() ) {
                 File timeStampDir = createTimeStampDir( timeStamp, reportDir );
-                dump.getTimeStampFileNameMap().put( timeStamp, timeStampDir.getName() );
+                dump.getTimeStampDirNameMap().put( timeStamp, timeStampDir.getName() );
 
                 Map<String, StackHolder> map = dump.getStackHolderMapByTimeStamp().get( timeStamp );
                 for ( String thread : map.keySet() ) {
                     StackHolder stackHolder = map.get( thread );
-                    createStackFile( stackHolder, timeStampDir );
+                    File stackFile = createStackFile( stackHolder, timeStampDir );
+                    dump.getThreadFileNameMap().put( thread, stackFile.getName() );
                 }
 
                 createStackInformationFile( dump.getStackInformationMap().get( timeStamp ), timeStampDir );
@@ -43,7 +44,7 @@ public class DumpPersister {
         return timeDir;
     }
 
-    private void createStackFile( StackHolder stackHolder, File parent ) throws IOException {
+    private File createStackFile( StackHolder stackHolder, File parent ) throws IOException {
         String stackFileName = normalizeString( stackHolder.getThread() );
         File stackFile = new File( parent, stackFileName );
         PrintWriter writer = new PrintWriter( new BufferedWriter( new FileWriter( stackFile ) ) );
@@ -51,6 +52,7 @@ public class DumpPersister {
             writer.println( line );
         }
         writer.close();
+        return stackFile;
     }
 
     private void createStackInformationFile( List<String> chunk, File parent ) throws IOException {
