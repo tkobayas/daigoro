@@ -74,6 +74,6 @@ public class DumpPersister {
     }
 
     private String normalizeString( String string ) {
-        return string.replaceAll( "[ :/\"]", "-" );
+        return string.replaceAll( "[ :/\"\\[\\]#\\(\\)]", "-" );
     }
 }

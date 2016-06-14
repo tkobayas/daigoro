@@ -47,6 +47,9 @@ public class Daigoro {
             // thread html
             createThreadHTMLs( dump, reportDir, cfg );
 
+            // timestamp html
+            createTimeStampHTMLs( dump, reportDir, cfg );
+
             // index.html
             File indexHtml = createReportIndexHTML( dump, reportDir, cfg );
 
@@ -58,6 +61,28 @@ public class Daigoro {
 
         } catch ( Exception e ) {
             throw new RuntimeException( e );
+        }
+    }
+
+    private void createTimeStampHTMLs( Dump dump, File reportDir, Configuration cfg ) throws TemplateException, IOException {
+        List<String> timeStampList = dump.getTimeStampList();
+
+        for ( String timeStamp : timeStampList ) {
+            String timeStampDirName = dump.getTimeStampDirNameMap().get( timeStamp );
+
+            Template template = cfg.getTemplate( "timestamp.ftl" );
+            Map<String, Object> root = new HashMap<String, Object>();
+            root.put( "reportName", dump.getReportName() );
+            root.put( "timeStamp", timeStamp );
+            root.put( "timeStampDirName", timeStampDirName );
+
+            root.put( "threadList", dump.getThreadList() );
+            root.put( "threadFileNameMap", dump.getThreadFileNameMap() );
+
+            File timeStampHtml = new File( reportDir, timeStampDirName + ".html" );
+            PrintWriter writer = new PrintWriter( new BufferedWriter( new FileWriter( timeStampHtml ) ) );
+            template.process( root, writer );
+            writer.close();
         }
     }
 
@@ -94,6 +119,7 @@ public class Daigoro {
         root.put( "status", dump.getStackMatrix() );
         root.put( "threadStatusMap", dump.getThreadStatusMap() );
         root.put( "threadFileNameMap", dump.getThreadFileNameMap() );
+        root.put( "timeStampDirNameMap", dump.getTimeStampDirNameMap() );
 
         File indexHtml = new File( reportDir, "index.html" );
         PrintWriter writer = new PrintWriter( new BufferedWriter( new FileWriter( indexHtml ) ) );
