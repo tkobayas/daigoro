@@ -5,6 +5,8 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.net.URI;
+import java.nio.file.FileSystems;
 import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.List;
@@ -54,7 +56,7 @@ public class Daigoro {
             File indexHtml = createReportIndexHTML( dump, reportDir, cfg );
 
             // css
-            FileUtils.copyDir( Paths.get( this.getClass().getResource( "/css" ).toURI() ), new File( reportDir, "css" ).toPath() );
+            FileUtils.copyDir( new File( "css" ).toPath(), new File( reportDir, "css" ).toPath() );
 
             System.out.println( "Created Report : " );
             System.out.println( indexHtml.getAbsolutePath() );
