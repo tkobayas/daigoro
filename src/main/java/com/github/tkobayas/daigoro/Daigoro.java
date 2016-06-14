@@ -121,6 +121,12 @@ public class Daigoro {
         root.put( "threadFileNameMap", dump.getThreadFileNameMap() );
         root.put( "timeStampDirNameMap", dump.getTimeStampDirNameMap() );
 
+        HashMap<String, String> timeMap = new HashMap<String, String>();
+        for ( String timeStamp : dump.getTimeStampList() ) {
+            timeMap.put( timeStamp, timeStamp.substring( timeStamp.length() - 8 ) );
+        }
+        root.put( "timeMap", timeMap );
+
         File indexHtml = new File( reportDir, "index.html" );
         PrintWriter writer = new PrintWriter( new BufferedWriter( new FileWriter( indexHtml ) ) );
         template.process( root, writer );

@@ -56,6 +56,9 @@ public class DumpPersister {
     }
 
     private void createStackInformationFile( List<String> chunk, File parent ) throws IOException {
+        if (chunk == null) {
+            return;
+        }
         File stackInformationFile = new File( parent, STACK_INFORMATION_FILENAME );
         PrintWriter writer = new PrintWriter( new BufferedWriter( new FileWriter( stackInformationFile ) ) );
         for ( String line : chunk ) {
@@ -65,6 +68,9 @@ public class DumpPersister {
     }
 
     private void createDeadlockAnalysisFile( List<String> chunk, File parent ) throws IOException {
+        if (chunk == null) {
+            return;
+        }
         File deadlockAnalysisFile = new File( parent, DEADLOCK_ANALYSIS_FILENAME );
         PrintWriter writer = new PrintWriter( new BufferedWriter( new FileWriter( deadlockAnalysisFile ) ) );
         for ( String line : chunk ) {

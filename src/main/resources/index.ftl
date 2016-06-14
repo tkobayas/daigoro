@@ -37,7 +37,7 @@ function hideToggle(status) {
   <tr>
     <th></th>
     <#list timeStampList as timeStamp>
-    <th><a href="${timeStampDirNameMap[timeStamp]}.html">&lt; ${timeStamp?index+1} &gt;</a></th>
+    <th><a href="${timeStampDirNameMap[timeStamp]}.html">${timeMap[timeStamp]}</a></th>
     </#list>
   </tr>
   <#list threadList as thread>
