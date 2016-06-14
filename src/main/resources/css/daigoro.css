@@ -29,3 +29,7 @@ td.ABSENT {
 td.NATIVE {
    background-color: lavender
 }
+
+pre {
+   line-height: 120%;
+}

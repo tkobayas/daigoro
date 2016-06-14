@@ -16,9 +16,9 @@
 </head>
 <body>
 <h2>${reportName} - ${threadName}</h2>
-
+<h4><a href="index.html">back to index</a></h4>
 <#list timeStampList as timeStamp>
-<div id='${timeStampDirNameMap[timeStamp]}'></div>
+<pre id='${timeStampDirNameMap[timeStamp]}'></pre>
 <p/>
 </#list>
 

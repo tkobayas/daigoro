@@ -42,7 +42,7 @@ function hideToggle(status) {
   </tr>
   <#list threadList as thread>
   <tr class="${threadStatusMap[thread]}">
-    <td align="right">${thread}</td>
+    <td align="right"><a href="${threadFileNameMap[thread]}.html">${thread}</a></td>
     <#list timeStampList as timeStamp>
     <td align="center" valign="center" class="${status[timeStamp?index][thread?index].status}">${status[timeStamp?index][thread?index].statusChar}</td>
     </#list>
