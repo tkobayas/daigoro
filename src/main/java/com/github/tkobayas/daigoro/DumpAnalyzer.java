@@ -1,7 +1,11 @@
 package com.github.tkobayas.daigoro;
 
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class DumpAnalyzer {
@@ -16,14 +20,26 @@ public class DumpAnalyzer {
     // java.lang.Thread.State: TIMED_WAITING (on object monitor)
     private static final Pattern IDLE = Pattern.compile( "^.*: (WAITING|TIMED_WAITING).*$" );
 
+    // - waiting to lock <0x0000000709802518> (a org.example.MySingletonResource)
+    private static final Pattern WAITING_TO_LOCK = Pattern.compile( "^.*waiting to lock <(.*)>.*$" );
+
+    // - locked <0x0000000709802518> (a org.example.MySingletonResource)
+    private static final Pattern LOCKED = Pattern.compile( "^.*locked <(.*)>.*$" );
+
     public void analyze( Dump dump ) {
         StackHolder[][] stackMatrix = dump.getStackMatrix();
         Map<String, List<StackHolder>> stackHolderMapByThread = dump.getStackHolderMapByThread();
         List<String> threadList = dump.getThreadList();
+        HashMap<String, Set<String>> waitLockSetMap = new HashMap<String, Set<String>>(); // per TimeStamp
         for ( String thread : threadList ) {
             List<StackHolder> list = stackHolderMapByThread.get( thread );
             for ( int i = 0; i < list.size(); i++ ) {
                 StackHolder stackHolder = list.get( i );
+                if ( !waitLockSetMap.containsKey( stackHolder.getTimeStamp() ) ) {
+                    waitLockSetMap.put( stackHolder.getTimeStamp(), new HashSet<String>() );
+                }
+                Set<String> waitLockSet = waitLockSetMap.get( stackHolder.getTimeStamp() );
+
                 if ( isNative( stackHolder ) ) {
                     stackHolder.setStatus( Status.NATIVE );
                 } else if ( isRunning( stackHolder ) ) {
@@ -32,10 +48,13 @@ public class DumpAnalyzer {
                         stackHolder.setStatus( Status.SAME_AS_PREVIOUS );
                     }
                 } else if ( isBlocked( stackHolder ) ) {
+                    String waitLock = getWaitLock( stackHolder );
+                    waitLockSet.add( waitLock );
                     stackHolder.setStatus( Status.BLOCKED );
                 } else if ( isIdle( stackHolder ) ) {
                     stackHolder.setStatus( Status.IDLE );
                 }
+                collectHoldingLocks( stackHolder );
             }
 
             Map<String, ThreadStatus> threadStatusMap = dump.getThreadStatusMap();
@@ -48,9 +67,54 @@ public class DumpAnalyzer {
             } else {
                 threadStatusMap.put( thread, ThreadStatus.WORKING );
             }
-
         }
 
+        // re-evaluate the status
+        for ( String thread : threadList ) {
+            List<StackHolder> list = stackHolderMapByThread.get( thread );
+            for ( int i = 0; i < list.size(); i++ ) {
+                StackHolder stackHolder = list.get( i );
+                if ( stackHolder.getStatus() == Status.RUNNING ) {
+                    Set<String> waitLockSet = waitLockSetMap.get( stackHolder.getTimeStamp() );
+                    for ( String waitLock : waitLockSet ) {
+                        if ( stackHolder.getHoldingLockList().contains( waitLock ) ) {
+                            stackHolder.setStatus( Status.BLOCKING );
+                        }
+                    }
+                } else if ( stackHolder.getStatus() == Status.SAME_AS_PREVIOUS ) {
+                    Set<String> waitLockSet = waitLockSetMap.get( stackHolder.getTimeStamp() );
+                    for ( String waitLock : waitLockSet ) {
+                        if ( stackHolder.getHoldingLockList().contains( waitLock ) ) {
+                            stackHolder.setStatus( Status.BLOCKING_SAME_AS_PREVIOUS );
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    private void collectHoldingLocks( StackHolder stackHolder ) {
+        List<String> holdingLockList = stackHolder.getHoldingLockList();
+        List<String> stack = stackHolder.getStack();
+        for ( String line : stack ) {
+            Matcher matcher = LOCKED.matcher( line );
+            if ( matcher.matches() ) {
+                holdingLockList.add( matcher.group( 1 ).trim() );
+            }
+        }
+    }
+
+    private String getWaitLock( StackHolder stackHolder ) {
+        String lock = null;
+        List<String> stack = stackHolder.getStack();
+        for ( String line : stack ) {
+            Matcher matcher = WAITING_TO_LOCK.matcher( line );
+            if ( matcher.matches() ) {
+                lock = matcher.group( 1 ).trim();
+                break;
+            }
+        }
+        return lock;
     }
 
     private boolean isFullyUnchanged( List<StackHolder> list ) {

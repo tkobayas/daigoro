@@ -1,5 +1,6 @@
 package com.github.tkobayas.daigoro;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class StackHolder implements Comparable<StackHolder> {
@@ -11,6 +12,16 @@ public class StackHolder implements Comparable<StackHolder> {
     private Status status = Status.IDLE;
 
     private List<String> stack;
+
+    private List<String> holdingLockList = new ArrayList<String>();
+
+    public List<String> getHoldingLockList() {
+        return holdingLockList;
+    }
+
+    public void setHoldingLockList( List<String> holdingLockList ) {
+        this.holdingLockList = holdingLockList;
+    }
 
     public List<String> getStack() {
         return stack;
@@ -62,7 +73,7 @@ public class StackHolder implements Comparable<StackHolder> {
     }
 
     public String getStatusChar() {
-        if ( status == Status.SAME_AS_PREVIOUS ) {
+        if ( status == Status.SAME_AS_PREVIOUS || status == Status.BLOCKING_SAME_AS_PREVIOUS ) {
             return "<";
         } else {
             return "";
