@@ -27,7 +27,6 @@ public class DumpAnalyzer {
     private static final Pattern LOCKED = Pattern.compile( "^.*locked <(.*)>.*$" );
 
     public void analyze( Dump dump ) {
-        StackHolder[][] stackMatrix = dump.getStackMatrix();
         Map<String, List<StackHolder>> stackHolderMapByThread = dump.getStackHolderMapByThread();
         List<String> threadList = dump.getThreadList();
         HashMap<String, Set<String>> waitLockSetMap = new HashMap<String, Set<String>>(); // per TimeStamp
