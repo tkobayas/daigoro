@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.URI;
 import java.nio.file.FileSystems;
+import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.List;
@@ -56,7 +57,10 @@ public class Daigoro {
             File indexHtml = createReportIndexHTML( dump, reportDir, cfg );
 
             // css
-            FileUtils.copyDir( new File( "css" ).toPath(), new File( reportDir, "css" ).toPath() );
+            File cssDir = new File( reportDir, "css" );
+            cssDir.mkdir();
+            Files.copy( this.getClass().getResourceAsStream( "/css/daigoro.css" ), new File(cssDir, "daigoro.css").toPath() );
+            Files.copy( this.getClass().getResourceAsStream( "/css/foundation.css" ), new File(cssDir, "foundation.css").toPath() );
 
             System.out.println( "Created Report : " );
             System.out.println( indexHtml.getAbsolutePath() );
