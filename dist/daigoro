@@ -1,0 +1,4 @@
+#!/bin/bash
+
+java -cp $DAIGORO_HOME/dist/daigoro-1.0.0.jar:$DAIGORO_HOME/dist/lib/* com.github.tkobayas.daigoro.Main $@
+
